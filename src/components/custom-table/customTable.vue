@@ -75,19 +75,16 @@
                         </template>
                         </template>
             </el-table-column>
+
             </template>
-            <el-table-column ref="fixedColumn" label="操作" align="center" :width="operates.width" :fixed="operates.fixed"
-                            >
+            <el-table-column
+                    fixed="right"
+                    label="操作"
+                    width="200">
                 <template slot-scope="scope">
-                    <div class="operate-group">
-                        <template v-for="(btn, key) in operates.list">
-                            <div class="item" v-if="btn.show" :key='btn.id'>
-                                <el-button :type="btn.type" size="mini" :icon="btn.icon" :disabled="btn.disabled"
-                                           :plain="btn.plain" @click.native.prevent="btn.method(key,scope.row)">{{ btn.label }}
-                                </el-button>
-                            </div>
-                        </template>
-                    </div>
+
+                    <el-button @click="handleClick(scope.row)" type="text" size="small" v-if="scope.row.process_status==='refunding'"></el-button>
+                    <el-button type="text" size="small" v-for="(item,index) in ButtonList" @click.native.prevent="item.method(index,scope.row)" :key="index">{{item.buttonText}}</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -108,6 +105,12 @@
                             isShowUpShelve:false
                     }
 
+                }
+            },
+            ButtonList:{
+                type:Array,
+                default:()=>{
+                    return[]
                 }
             },
             columns:{
@@ -162,6 +165,9 @@
         methods:{
             onTableAdd(){
                 this.$emit('onTableAdd')
+            },
+            handleClick(row){
+                console.log(row,"row")
             }
         }
     };

@@ -54,6 +54,12 @@ export default new Router({
                     component: () => import(/* webpackChunkName: "form" */ '@/view/evaluationManagement/EvaluationList.vue'),
                     meta: { title: '评价列表' },
                 },
+
+                {
+                    path: '/pay',
+                    component: () => import(/* webpackChunkName: "form" */ '@/components/custom-pay/index.vue'),
+                    meta: { title: '评价列表' },
+                },
                 {
                     path: '/basicSetup',
                     component: () => import(/* webpackChunkName: "form" */ '@/view/storeManagement/basicSetup/index.vue'),
@@ -87,6 +93,18 @@ export default new Router({
                     meta: { title: '优惠券管理' },
                 },
                 {
+                    path: '/couponInfo',
+                    component: () => import(/* webpackChunkName: "form" */ '@/view/marketingPromotion/couponManagement/couponInfo.vue'),
+                    meta: { title: '优惠券详情' },
+                },
+                {
+                    path: '/addCoupon',
+                    component: () => import(/* webpackChunkName: "form" */ '@/view/marketingPromotion/couponManagement/addCoupon.vue'),
+                    meta: { title: '优惠券新增' },
+
+                },
+
+                {
                     path: '/activity',
                     component: () => import(/* webpackChunkName: "form" */ '@/view/marketingPromotion/activityManagement/index.vue'),
                     meta: { title: '活动管理' },
@@ -105,6 +123,11 @@ export default new Router({
                     path: '/refundReturn',
                     component: () => import(/* webpackChunkName: "form" */ '@/view/afterSaleManagement/refundReturn/index.vue'),
                     meta: { title: '退货退款管理' },
+                },
+                {
+                    path: '/refundInfo',
+                    component: () => import(/* webpackChunkName: "form" */ '@/view/afterSaleManagement/refundManagement/refundInfo.vue'),
+                    meta: { title: '退款详情' },
                 },
                 {
                     path: '/maintenanceAanagement',

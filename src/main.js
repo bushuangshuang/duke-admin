@@ -9,7 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
 import './assets/css/icon.css';
 import './components/common/directives';
 import 'babel-polyfill';
-import { getApi,postApi } from '@/utils/request';
+import { getApi,postApi,put ,patch,deleted} from '@/utils/request';
 Vue.config.productionTip = false;
 Vue.use(VueI18n);
 Vue.use(ElementUI, {
@@ -20,7 +20,12 @@ const i18n = new VueI18n({
     messages
 });
 Vue.prototype.$getApi = getApi;
-Vue.prototype.$postApi = getApi;
+Vue.prototype.$postApi = postApi;
+Vue.prototype.$put = put;
+Vue.prototype.$patch = patch;
+Vue.prototype.$deleted = deleted;
+
+
 //使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title} | vue-manage-system`;

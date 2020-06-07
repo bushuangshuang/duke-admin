@@ -51,7 +51,7 @@ axios.interceptors.request.use(
         config.data =config.data
         config.headers = {
             'Content-Type': 'Application/json',
-            "Authorization": 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9wcmFteS5uYXRhcHAxLmNjXC9hcGlcL2F1dGhcL21vYmlsZSIsImlhdCI6MTU5MTI2NTA4MiwiZXhwIjoxNjQzMTA1MDgyLCJuYmYiOjE1OTEyNjUwODIsImp0aSI6InV4ZUd6a0Q3b0FwUEhIWnIiLCJzdWIiOjYxLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.XA0YqmWtSLmWb7KL1r7ZAE4TZ4eJWDeTB5WegmEUo1g',
+            "Authorization": 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9wcmFteS5uYXRhcHAxLmNjXC9hcGlcL2F1dGhcL21vYmlsZSIsImlhdCI6MTU5MTUwNjM4MywiZXhwIjoxNjQzMzQ2MzgzLCJuYmYiOjE1OTE1MDYzODMsImp0aSI6IjJUTzRNTVRsbE9oN3V4aEIiLCJzdWIiOjQyLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.P92OXmoBGvCkzV7AgoTwIoWmsXinl6HxF3NbRMjlheM',
             "Accept":"Application/json"
         }
         // if(token){
@@ -60,7 +60,7 @@ axios.interceptors.request.use(
         if(config.method=='PATCH'){
             config.headers = {
                 'Content-Type': 'Application/json',
-                "Authorization":'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9wcmFteS5uYXRhcHAxLmNjXC9hcGlcL2F1dGhcL21vYmlsZSIsImlhdCI6MTU5MTI2NTA4MiwiZXhwIjoxNjQzMTA1MDgyLCJuYmYiOjE1OTEyNjUwODIsImp0aSI6InV4ZUd6a0Q3b0FwUEhIWnIiLCJzdWIiOjYxLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.XA0YqmWtSLmWb7KL1r7ZAE4TZ4eJWDeTB5WegmEUo1g',
+                "Authorization":'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9wcmFteS5uYXRhcHAxLmNjXC9hcGlcL2F1dGhcL21vYmlsZSIsImlhdCI6MTU5MTUwNjM4MywiZXhwIjoxNjQzMzQ2MzgzLCJuYmYiOjE1OTE1MDYzODMsImp0aSI6IjJUTzRNTVRsbE9oN3V4aEIiLCJzdWIiOjQyLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.P92OXmoBGvCkzV7AgoTwIoWmsXinl6HxF3NbRMjlheM',
                 "Accept":"Application/json",
                 'x-http-method-override':'PATCH'
             }
@@ -110,9 +110,9 @@ axios.interceptors.response.use(
                 case 408:
                     error.message = '请求超时'
                     break
-                case 422:
-                    error.message = error.response.data.message;
-                    break
+                // case 422:
+                //     error.message = error.response.data.message;
+                //     break
                 case 429:
                     error.message = error.response.data.message;
                     break

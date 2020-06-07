@@ -37,8 +37,15 @@
                     <el-option v-for="op in item.options" :label="op.label" :value="op.value" :key="op.value"></el-option>
                 </el-select>
                 <!-- 单选 -->
-                <el-radio-group v-if="item.type==='Radio'" v-model="searchData[item.prop]">
-                    <el-radio v-for="ra in item.radios" :label="ra.value" :key="ra.value">{{ra.label}}</el-radio>
+                <el-radio-group v-if="item.type==='Radio'" v-model="searchData[item.prop]" @change="item.change(searchData[item.prop])">
+                    <el-radio v-for="ra in item.radios" :label="ra.value" :key="ra.value">
+                        {{ra.label}}
+                        <input type="text" v-if="ra.Radio=='input'" :placeholder="item.placeholder" v-model="searchData[item.propInput]">
+                        <span v-if="ra.Radio=='input'" >元</span>
+                        <el-date-picker v-model="searchData[item.prop]" v-if="ra.typeT=='date'"></el-date-picker>
+                        <el-date-picker v-model="searchData[item.prop]" v-if="ra.typeT=='date'"></el-date-picker>
+                    </el-radio>
+
                 </el-radio-group>
                 <!-- 单选按钮 -->
                 <el-radio-group v-if="item.type==='RadioButton'" v-model="searchData[item.prop]" @change="item.change && item.change(searchData[item.prop])">
@@ -61,12 +68,30 @@
 <!--                图片上传-->
                 <el-upload
                         v-if="item.type==='Upload'"
-                        action="https://jsonplaceholder.typicode.com/posts/"
+                        action="https://api.ljkj1688.com/api/upload/public/images"
+                        :headers="token"
+                        :data="reportData"
+                        :show-file-list="true"
+                        name="images[]"
+                        :on-success="handleAvatarSuccess"
+                        :before-upload="beforeAvatarUpload"
                         list-type="picture-card"
                         :on-preview="handlePictureCardPreview"
-                        :on-remove="handleRemove">
-                    <i class="el-icon-plus"></i>
+                        :on-remove="handleRemove"
+                        :limit=5>
+                    <i style="display: block;position: relative;top: 50px;" slot="default" class="el-icon-plus"></i>
                 </el-upload>
+                <el-dialog :visible.sync="dialogVisible">
+                    <img width="100%" :src="dialogImageUrl" alt="">
+                </el-dialog>
+<!--                地址插件-->
+                <el-cascader
+                        size="large"
+                        v-if="item.type==='cascader'"
+                        :options="optionsCaser"
+                        v-model="searchData[item.prop]"
+                        @change="addressChange">
+                </el-cascader>
                 <el-dialog :visible.sync="dialogVisible">
                     <img width="100%" :src="dialogImageUrl" alt="">
                 </el-dialog>
@@ -114,7 +139,7 @@
                 </div>
             </el-form-item>
             <el-form-item style="width:10%;margin: 0 auto">
-                <el-button type="primary" @click="onAddGoood">发布商品</el-button>
+                <el-button type="primary" @click="onAddGoood">{{buttonText}}</el-button>
             </el-form-item>
         </el-form>
 
@@ -125,12 +150,17 @@
             import 'quill/dist/quill.snow.css';
             import 'quill/dist/quill.bubble.css';
             import { quillEditor } from 'vue-quill-editor';
+            import { regionData,CodeToText } from 'element-china-area-data'
             export default {
                 name:'customForm',
                 components:{
                     quillEditor
                 },
                 props:{
+                    buttonText:{
+                        type:String,
+                        default:""
+                    },
                     ruleInfoForm: {
                         type: Object,
                         default: () => {
@@ -208,6 +238,14 @@
                 },
                 data () {
                     return {
+                        imgurl:'',
+                        token:{
+                            "Authorization": '\'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9wcmFteS5uYXRhcHAxLmNjXC9hcGlcL2F1dGhcL21vYmlsZSIsImlhdCI6MTU5MTQzMzIxNiwiZXhwIjoxNjQzMjczMjE2LCJuYmYiOjE1OTE0MzMyMTYsImp0aSI6InVRYVY2Y05Cc0VCd2hpaDUiLCJzdWIiOjYxLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.e4I78I0gYfRO033NgP96_dJ-neMWb6R3tfeWtefkha4'
+                        },
+                        reportData:{
+                            name:"timg.jpg"
+                        },
+                        optionsCaser: regionData,
                         rules: this.ruleInfoForm,
                         dialogImageUrl: '',
                         dialogVisible: false,
@@ -216,6 +254,16 @@
                     };
                 },
                 methods:{
+                    handleAvatarSuccess(res, file) {
+                        console.log(res.data[0]);
+                        this.$emit("handleAvatarSuccess",res)
+                        this.imgurl.push(res.data[0])
+                        console.log(this.imgurl)
+                    },
+                    handleChange(value){
+                        this.value=this.value.pop()
+                        console.log(this.value);
+                    },
                     onAddGoood(){
                         this.$emit('onAddGoood')
                     },
@@ -248,7 +296,10 @@
                     },
                     beforeRemove(file, fileList) {
                         return this.$confirm(`确定移除 ${ file.name }？`);
-                    }
+                    },
+                    addressChange(arr) {
+                        this.$emit("addressChange",arr)
+                    },
                 }
             }
 

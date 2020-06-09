@@ -44,8 +44,7 @@
       <el-form-item v-for="item in searchForm" :label="item.label" :key="item.prop">
         <el-input
           v-if="item.type==='textarea'"
-          :type="item.type"
-          v-model="searchData[item.prop]"
+          :type="item.itype"
           :placeholder="item.placeholder"
         ></el-input>
         <span v-if="item.type==='title'" :style="{marginLeft:item.marginLeft}">{{item.value}}</span>
@@ -377,7 +376,7 @@ export default {
     addressChange(arr) {
       this.$emit("addressChange", arr);
     }
-    
+
   }
 };
 </script>

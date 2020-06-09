@@ -47,6 +47,7 @@ export default {
                 if (valid) {
                     this.$message.success('登录成功');
                     localStorage.setItem('ms_username', this.param.username);
+					sessionStorage.setItem('token', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9wcmFteS5uYXRhcHAxLmNjXC9hcGlcL2F1dGhcL21vYmlsZSIsImlhdCI6MTU5MTYxMzAwMywiZXhwIjoxNjQzNDUzMDAzLCJuYmYiOjE1OTE2MTMwMDMsImp0aSI6IlRLWnFHREwzb05zNk9EMXUiLCJzdWIiOjQyLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.UY-GXWX7FZJ7yCpEhLl8ebYEbsd5ggry81g_E0POCwk')
                     this.$router.push('/');
                 } else {
                     this.$message.error('请输入账号和密码');

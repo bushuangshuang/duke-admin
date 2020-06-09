@@ -51,7 +51,7 @@ axios.interceptors.request.use(
         config.data =config.data
         config.headers = {
             'Content-Type': 'Application/json',
-            "Authorization": localStorage.getItem("X-TOKEN"),
+            "Authorization": sessionStorage.getItem("token"),
             "Accept":"Application/json"
         }
         // if(token){
@@ -60,7 +60,7 @@ axios.interceptors.request.use(
         if(config.method=='PATCH'){
             config.headers = {
                 'Content-Type': 'Application/json',
-                "Authorization":localStorage.getItem("X-TOKEN"),
+                "Authorization":sessionStorage.getItem("token"),
                 "Accept":"Application/json",
                 'x-http-method-override':'PATCH'
             }

@@ -110,9 +110,26 @@ export default new Router({
                     meta: { title: '活动管理' },
                 },
                 {
+                    path: '/addActivity',
+                    component: () => import(/* webpackChunkName: "form" */ '@/view/marketingPromotion/activityManagement/addActivity.vue'),
+                    meta: { title: '添加活动' },
+                },
+                {
+                    path: '/activityInfo',
+                    component: () => import(/* webpackChunkName: "form" */ '@/view/marketingPromotion/activityManagement/activityInfo.vue'),
+                    meta: { title: '活动详情' },
+                },
+
+
+                {
                     path: '/advertising',
                     component: () => import(/* webpackChunkName: "form" */ '@/view/marketingPromotion/advertisingManagement/index.vue'),
                     meta: { title: '广告管理' },
+                },
+                {
+                    path: '/advertisingInfo',
+                    component: () => import(/* webpackChunkName: "form" */ '@/view/marketingPromotion/advertisingManagement/advertisingInfo.vue'),
+                    meta: { title: '广告编辑' },
                 },
                 {
                     path: '/refundManagement',
@@ -125,6 +142,11 @@ export default new Router({
                     meta: { title: '退货退款管理' },
                 },
                 {
+                    path: '/refundReturnInfo',
+                    component: () => import(/* webpackChunkName: "form" */ '@/view/afterSaleManagement/refundReturn/refundReturnInfo.vue'),
+                    meta: { title: '退货退款详情' },
+                },
+                {
                     path: '/refundInfo',
                     component: () => import(/* webpackChunkName: "form" */ '@/view/afterSaleManagement/refundManagement/refundInfo.vue'),
                     meta: { title: '退款详情' },
@@ -135,6 +157,13 @@ export default new Router({
                     meta: { title: '维修管理' },
 
                 },
+                {
+                    path: '/detailsMaintenance',
+                    component: () => import(/* webpackChunkName: "form" */ '@/view/afterSaleManagement/maintenanceAanagement/detailsMaintenance.vue'),
+                    meta: { title: '维修详情' },
+
+                },
+
                 // 数据管理
                 {
                     path: '/businessData',

@@ -18,9 +18,9 @@ export default {
     },
     methods:{
         storeActivation(){
-            // this.$postApi('/shop/activation/order').then(res=>{
+            this.$postApi('/shop/activation/order').then(res=>{
                this.$router.push("/pay")
-            // })
+            })
         },
         storePay(){
             const data={

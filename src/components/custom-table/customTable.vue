@@ -65,8 +65,10 @@
                                  :align="column.align"
                                  :width="column.width">
                     <template slot-scope="scope">
+                        <img :src="scope.row.piceure" alt="" v-if="column.src==true" style="height: 40px">
                         <template v-if="!column.render">
                             <template v-if="column.formatter">
+
                                 <span v-html="column.formatter(scope.row, column)"></span>
                             </template>
                             <template v-else>
@@ -78,13 +80,23 @@
 
             </template>
             <el-table-column
+                    v-if="operation==true"
                     fixed="right"
                     label="操作"
                     width="200">
                 <template slot-scope="scope">
+                    <div v-if="scope.row.process_status">
+                        <el-button @click="handleInfo(scope.row)" type="text" size="small">详情</el-button>
+                        <el-button @click="handleDelete(scope.row)" type="text" size="small" v-if="scope.row.process_status==='success'||scope.row.process_status==='refused'" >删除</el-button>
+                        <el-button @click="handleConfirmGoods(scope.row)" type="text" size="small" v-if="scope.row.process_status==='wai_shopper_rcv'" >确认收货</el-button>
+                        <el-button @click="handleRefuseGoods(scope.row)" type="text" size="small" v-if="scope.row.process_status==='wai_shopper_rcv'" >拒绝收货</el-button>
+                        <el-button @click="handleAgreeRefund(scope.row)" type="text" size="small" v-if="scope.row.process_status==='pending'" >同意</el-button>
+                        <el-button @click="handleCompleteMaintenance(scope.row)" type="text" size="small" v-if="scope.row.process_status==='wait_user_confirm'" >维修完成</el-button>
 
-                    <el-button @click="handleClick(scope.row)" type="text" size="small" v-if="scope.row.process_status==='refunding'"></el-button>
-                    <el-button type="text" size="small" v-for="(item,index) in ButtonList" @click.native.prevent="item.method(index,scope.row)" :key="index">{{item.buttonText}}</el-button>
+
+                    </div>
+
+                    <el-button type="text" size="small" v-if="ButtonList" v-for="(item,index) in ButtonList" @click.native.prevent="item.method(index,scope.row)" :key="index" :style="{display:item.display}">{{item.buttonText}}</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -95,6 +107,10 @@
     export default {
         name: 'customTable',
         props:{
+            operation:{
+               type:Boolean,
+               default:true
+            },
             buttonForm:{
                 type:Object,
                 default:()=>{
@@ -140,7 +156,9 @@
             },
             searchForm:{
                 type:Array,
-                default:[]
+                default:()=>{
+                    return[]
+                }
             },
             searchHandle:{
                 type:Array,
@@ -154,7 +172,9 @@
             },
             tableData:{
                 type:Array,
-                default:[]
+                default:()=>{
+                    return[]
+                }
             }
         },
         data(){
@@ -163,11 +183,32 @@
             }
         },
         methods:{
+            handleCompleteMaintenance(row){
+                this.$emit('handleCompleteMaintenance',row)
+            },
+            handleRefuseGoods(){
+                this.$emit('handleRefuseGoods',row)
+            },
+            handleConfirmGoods(row){
+                this.$emit('handleConfirmGoods',row)
+            },
+            handleAgreeRefund(row){
+                this.$emit('handleAgreeRefund',row)
+            },
             onTableAdd(){
                 this.$emit('onTableAdd')
             },
             handleClick(row){
                 console.log(row,"row")
+            },
+            handleInfo(row){
+                this.$emit("handleInfo",row)
+            },
+            handleDelete(row){
+                this.$emit("handleDelete",row)
+            },
+            handleRefused(row){
+                this.$emit("handleRefused",row)
             }
         }
     };

@@ -54,9 +54,9 @@
             },
             weixin(){
                 this.weixin1=true
-                this.qrcode('weixin://wxpay/bizpayurl?pr=09ZEr8X')
+                // this.qrcode('weixin://wxpay/bizpayurl?pr=09ZEr8X')
                 // this.weixin1=true
-                // this.payApi()
+                this.payApi()
                 // console.log("11")
             },
             onRadioChange(){
@@ -82,8 +82,9 @@
                     pay_method:this.pay_method,
                 }
                 this.$postApi('/shop/activation/pay',data).then(res=>{
-                    this.weixin1=false
-                    this.qrcode('weixin://wxpay/bizpayurl?pr=09ZEr8X')
+                    // this.weixin1=false
+                    console.log(res.data,"res")
+                    this.qrcode(res.data.code_url)
                 })
             },
             qrcode (url) {

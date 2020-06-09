@@ -51,7 +51,7 @@ axios.interceptors.request.use(
         config.data =config.data
         config.headers = {
             'Content-Type': 'Application/json',
-            "Authorization": sessionStorage.getItem("token"),
+            "Authorization": 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9wcmFteS5uYXRhcHAxLmNjXC9hcGlcL2F1dGhcL21vYmlsZSIsImlhdCI6MTU5MTU5MzExMCwiZXhwIjoxNjQzNDMzMTEwLCJuYmYiOjE1OTE1OTMxMTAsImp0aSI6InlRblY0UjJZVE01SWZSSEwiLCJzdWIiOjQyLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.Pp8t6RTj6sZTwqw1bzFqx0IckSS3NMQrAlBcRzxoz3I',
             "Accept":"Application/json"
         }
         // if(token){
@@ -60,7 +60,7 @@ axios.interceptors.request.use(
         if(config.method=='PATCH'){
             config.headers = {
                 'Content-Type': 'Application/json',
-                "Authorization":sessionStorage.getItem("token"),
+                "Authorization":'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9wcmFteS5uYXRhcHAxLmNjXC9hcGlcL2F1dGhcL21vYmlsZSIsImlhdCI6MTU5MTU5MzExMCwiZXhwIjoxNjQzNDMzMTEwLCJuYmYiOjE1OTE1OTMxMTAsImp0aSI6InlRblY0UjJZVE01SWZSSEwiLCJzdWIiOjQyLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.Pp8t6RTj6sZTwqw1bzFqx0IckSS3NMQrAlBcRzxoz3I',
                 "Accept":"Application/json",
                 'x-http-method-override':'PATCH'
             }

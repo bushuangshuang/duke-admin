@@ -10,6 +10,7 @@
 							:operates="operates"
 							:buttonForm="buttonForm"
 							@onTableAdd="onTableAdd"
+							:ButtonList="ButtonList"
 
 					>
 					</customTable>
@@ -33,6 +34,12 @@
 			}
 		},
 		props:{
+			ButtonList:{
+				type:Array,
+				default:()=>{
+					return[]
+				}
+			},
 			buttonForm:{
 				type:Object,
 				default:()=>{

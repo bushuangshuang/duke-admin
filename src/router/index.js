@@ -50,6 +50,17 @@ export default new Router({
                     meta: { title: '订单列表' },
                 },
                 {
+                    path: '/orderInfo',
+                    component: () => import(/* webpackChunkName: "form" */ '@/view/orderManagement/orderInfo.vue'),
+                    meta: { title: '订单详情' },
+                },
+                {
+                    path: '/updatePrice',
+                    component: () => import(/* webpackChunkName: "form" */ '@/view/orderManagement/updatePrice.vue'),
+                    meta: { title: '修改价格' },
+                    // updatePrice
+                },
+                {
                     path: '/EvaluationList',
                     component: () => import(/* webpackChunkName: "form" */ '@/view/evaluationManagement/EvaluationList.vue'),
                     meta: { title: '评价列表' },

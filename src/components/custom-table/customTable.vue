@@ -87,12 +87,15 @@
                 <template slot-scope="scope">
                     <div v-if="scope.row.process_status">
                         <el-button @click="handleInfo(scope.row)" type="text" size="small">详情</el-button>
-                        <el-button @click="handleDelete(scope.row)" type="text" size="small" v-if="scope.row.process_status==='success'||scope.row.process_status==='refused'" >删除</el-button>
+                        <el-button @click="handleDelete(scope.row)" type="text" size="small" v-if="scope.row.process_status==='success'||scope.row.process_status==='trade_closed'" >删除</el-button>
+                        <el-button @click="handleDelete(scope.row)" type="text" size="small" v-if="scope.row.process_status==='refused'" >删除</el-button>
                         <el-button @click="handleConfirmGoods(scope.row)" type="text" size="small" v-if="scope.row.process_status==='wai_shopper_rcv'" >确认收货</el-button>
                         <el-button @click="handleRefuseGoods(scope.row)" type="text" size="small" v-if="scope.row.process_status==='wai_shopper_rcv'" >拒绝收货</el-button>
                         <el-button @click="handleAgreeRefund(scope.row)" type="text" size="small" v-if="scope.row.process_status==='pending'" >同意</el-button>
                         <el-button @click="handleCompleteMaintenance(scope.row)" type="text" size="small" v-if="scope.row.process_status==='wait_user_confirm'" >维修完成</el-button>
-
+                        <el-button @click="handleUpdatePrice(scope.row)" type="text" size="small" v-if="scope.row.process_status==='wait_pay'" >修改价格</el-button>
+                        <el-button @click="handleFreight(scope.row)" type="text" size="small" v-if="scope.row.process_status==='wait_pay'" >修改运费</el-button>
+                        <el-button @click="handleDelivery(scope.row)" type="text" size="small" v-if="scope.row.process_status==='wait_delivery'" >发货</el-button>
 
                     </div>
 
@@ -183,6 +186,18 @@
             }
         },
         methods:{
+            // 修改价格
+            handleUpdatePrice(row){
+                this.$emit('handleUpdatePrice',row)
+            },
+            // 修改运费
+            handleFreight(row){
+                this.$emit('handleFreight',row)
+            },
+            // 发货
+            handleDelivery(row){
+                this.$emit('handleDelivery',row)
+            },
             handleCompleteMaintenance(row){
                 this.$emit('handleCompleteMaintenance',row)
             },

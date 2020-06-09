@@ -19,6 +19,7 @@
 	import customTabs from '@/components/custom-tabs/customTabs.vue'
 
 	export default{
+		name:'goodList',
 		components:{
 			customTabs
 		},

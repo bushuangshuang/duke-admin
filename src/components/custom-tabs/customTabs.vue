@@ -10,6 +10,10 @@
 							:operates="operates"
 							:buttonForm="buttonForm"
 							@onTableAdd="onTableAdd"
+							@handleInfo="handleInfo"
+							@handleDelivery="handleDelivery"
+							@handleUpdatePrice="handleUpdatePrice"
+							@handleDelete="handleDelete"
 							:ButtonList="ButtonList"
 
 					>
@@ -87,12 +91,32 @@
 			}
 		},
 		methods:{
+			// 修改价格
+			handleUpdatePrice(row){
+				this.$emit('handleUpdatePrice',row)
+			},
+			// 修改运费
+			handleFreight(row){
+				this.$emit('handleFreight',row)
+			},
+			// 发货
+			handleDelivery(row){
+				this.$emit('handleDelivery',row)
+			},
+
+			handleDelete(row){
+				this.$emit("handleDelete",row)
+			},
 			handleClick(tab){
 				this.$emit("onHandleClick",tab)
 			},
 			onTableAdd(){
 				this.$emit('onTableAdd')
+			},
+			handleInfo(row){
+				this.$emit("handleInfo",row)
 			}
+
 		}
 	}
 </script>

@@ -5,6 +5,11 @@
                 :tableData="tableData"
         >
         </customTable>
+        <customTable
+                :columns="columnsTwo"
+                :tableData="tableDataTwo"
+        >
+        </customTable>
     </div>
 </template>
 
@@ -31,23 +36,36 @@
                     {prop:'good', label:'已使用'},
                     {prop:'good', label:'未使用'},
                 ],
-                tableData:[]
+                columnsTwo:[
+                    {prop:'name', label:'优惠码'},
+                    {prop:'good', label:'领取用户'},
+                    {prop:'good', label:'领取时间'},
+                    {prop:'good', label:'当前状态'},
+                    {prop:'amount', label:'使用时间'},
+                    {prop:'good', label:'订单编号'},
+                ],
+                tableData:[],
+                tableDataTwo:[]
             }
         },
+        created() {
+            console.log(this.$route.query.row.id,"row")
+            this.getInfo()
+        },
         methods:{
+
                 getInfo(){
                     this.$getApi(`/shop/coupons/${this.$route.query.row.id}`).then(res=>{
                         console.log(res,"res")
+
                         this.tableData.push(res.data.data)
+                        this.tableDataTwo.push(res.data.data.coupon)
                     }).catch(err=>{
                         console.log(err,"err")
                     })
                 }
         },
-        mounted() {
-            console.log(this.$route.query.row.id,"row")
-            this.getInfo()
-        }
+
     };
 </script>
 

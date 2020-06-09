@@ -1,3 +1,4 @@
+  
 <template>
   <div class="el-form-box">
     <!-- 搜索表单 -->
@@ -44,7 +45,8 @@
       <el-form-item v-for="item in searchForm" :label="item.label" :key="item.prop">
         <el-input
           v-if="item.type==='textarea'"
-          :type="item.itype"
+          :type="item.type"
+          v-model="searchData[item.prop]"
           :placeholder="item.placeholder"
         ></el-input>
         <span v-if="item.type==='title'" :style="{marginLeft:item.marginLeft}">{{item.value}}</span>
@@ -309,13 +311,11 @@ export default {
   },
   methods: {
     handleAvatarSuccess(res, file) {},
-
     ///封面图片上传成功
     handleCoverimg(res, file) {
       this.imgurl.push(res.data[0]);
       this.$emit("emitUploadSuccess", this.imgurl);
     },
-
     handleChange(value) {
       this.value = this.value.pop();
       console.log(this.value);
@@ -346,7 +346,6 @@ export default {
     },
     //封面图片删除  //处理数组移除
     handleRemove(file, fileList) {
-
       let url = file.response.data[0];
       for (var a = 0; a < this.imgurl.length; a++) {
         if (this.imgurl[a] == url) {
@@ -355,7 +354,6 @@ export default {
       }
       this.$emit("emitUploadSuccess", this.imgurl);
     },
-
     handlePreview(file) {
       console.log(file);
     },
@@ -372,11 +370,10 @@ export default {
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`);
     },
-
     addressChange(arr) {
       this.$emit("addressChange", arr);
     }
-
+    
   }
 };
 </script>
@@ -402,10 +399,6 @@ export default {
 }
 .specificationColor {
   width: 100%;
-
   display: flex;
 }
 </style>
-
-
-

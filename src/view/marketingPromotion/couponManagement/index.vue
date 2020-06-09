@@ -129,7 +129,7 @@
                 })
             },
             handleEdit(index,row){
-                console.log('row',row)
+                this.$router.push('/addCoupon')
             }
         },
         mounted() {

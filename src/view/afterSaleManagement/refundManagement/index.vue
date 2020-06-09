@@ -4,7 +4,8 @@
                :searchForm="searchForm"
                :tableData="tableData"
                :columns="columns"
-               :operates="operates"
+               @handleInfo="handleInfo"
+               @handleDelete="handleDelete"
 
        >
        </customTable>
@@ -13,6 +14,7 @@
 
 <script>
     import customTable from '@/components/custom-table/customTable';
+    import { Message } from 'element-ui';
     export default {
         name: 'index',
         components:{
@@ -26,7 +28,7 @@
                     },
                 ],
                 columns:[
-                    {prop:'goodName', label:'商品名称'},
+                    {prop:'goodName', label:'商品名称222'},
                     {prop:'sku_real_amount', label:'交易金额'},
                     {prop:'numberTransactions', label:'退款金额'},
                     {prop:'averageTransactionAmount', label:'申请时间'},
@@ -40,48 +42,6 @@
                     {type:'button'},
 
                 ],
-                operates: {
-                    width: 200,
-                    fixed: 'right',
-                    list: [
-                        {
-                            id: '1',
-                            label: '详情',
-                            type: 'warning',
-                            show: true,
-                            icon: 'el-icon-edit',
-                            plain: true,
-                            disabled: false,
-                            method: (index, row) => {
-                                this.handleInfo(index, row)
-                            }
-                        },
-                        {
-                            id: '2',
-                            label: '删除',
-                            type: 'danger',
-                            show: false,
-                            icon: 'el-icon-edit',
-                            plain: false,
-                            disabled: false,
-                            method: (index, row) => {
-                                // this.handleInfo(index, row)
-                            }
-                        },
-                        {
-                            id: '3',
-                            label: '同意',
-                            type: 'danger',
-                            show: true,
-                            icon: 'el-icon-edit',
-                            plain: false,
-                            disabled: false,
-                            method: (index, row) => {
-                                // this.handleInfo(index, row)
-                            }
-                        },
-                    ]
-                }
             }
         },
         created() {
@@ -98,40 +58,23 @@
                     data.map(item=>{
                         item.goodName=item.order_item.good_name
                         item.sku_real_amount=item.order_item.sku_real_amount
-                        const Status=item.process_status
-                        if(Status=='refunding'){
-                            this.operates.list[0].show=true
-                            this.operates.list[1].show=false
-                            this.operates.list[2].show=false
-                            console.log(item,  this.operates.list[0],"this.operatesitem")
-                        }else{
-                            this.operates.list[0].show=false
-                            this.operates.list[1].show=false
-                            this.operates.list[2].show=false
-                            console.log(this.operates,"this.operates")
-                        }
+
                     })
                     this.tableData=data
                 }).catch(err=>{
                         // this.activation()
                 })
             },
-            activation(){
-                this.$postApi('/shop/activation/order',).then(res=>{
-                    console.log(res,"res激活下单")
-                    // this.pay()
+            handleDelete(row){
+                    const data={
+                        reason:'不想要'
+                    }
+                this.$deleted(`/shop/good-refunds/${row.id}`,data).then(res=>{
+                    this.$message.success('删除成功！');
+                    this.getRefundsList()
                 })
             },
-            handleRefused(){
-
-            },
-            handleAgree(){
-
-            },
-            handleDele(){
-
-            },
-            handleInfo(index,row){
+            handleInfo(row){
                 this.$router.push({
                     path:'/refundInfo',
                     query:{
@@ -139,7 +82,6 @@
                     }
 
                 })
-                console.log(index,row)
             }
 
         },

@@ -65,6 +65,39 @@
                                  :align="column.align"
                                  :width="column.width">
                     <template slot-scope="scope">
+<!--                        <el-tree-->
+<!--                                v-if="column.tree==true"-->
+<!--                                :data="column.prop"-->
+<!--                                :props="defaultProps"-->
+<!--                                accordion-->
+<!--                           >-->
+<!--
+                          @node-click="handleNodeClick"-->
+<!--                        </el-tree>-->
+<!--                        :empty-text="treeEmptyText"-->
+<!--                        :node-key="treeNodeKey"-->
+<!--                        :render-after-expand="treeRenderAfterExpand"-->
+<!--                        :highlight-current="treeHighlightCurrent"-->
+<!--                        :default-expand-all="treeDefaultExpandAll"-->
+<!--                        :expand-on-click-node="treeExpandOnClickNode"-->
+<!--                        :check-on-click-node="treeCheckOnClickNode"-->
+<!--                        :default-expanded-keys="treeDefaultExpandedKeys"-->
+<!--                        :show-checkbox="treeShowCheckbox"-->
+<!--                        :check-strictly="treeCheckStrictly"-->
+<!--                        :default-checked-keys="treeDefaultCheckedKeys"-->
+<!--                        :accordion="treeAccordion"-->
+<!--                        :indent="treeIndent"-->
+<!--                        :icon-class="treeIconClass"-->
+<!--                        :filter-node-method="filterNode"-->
+<!--                        @node-click="nodeClick"-->
+<!--                        @check-change="checkChange"-->
+<!--                        @check="check"-->
+                        <el-tree
+                                v-if="column.tree==true"
+                                :data="treeData"
+                                :props="defaultProps"
+                                ref="modelTree">
+                        </el-tree>
                         <img :src="scope.row.piceure" alt="" v-if="column.src==true" style="height: 40px">
                         <template v-if="!column.render">
                             <template v-if="column.formatter">
@@ -75,6 +108,7 @@
                                 <span>{{scope.row[column.prop]}}</span>
                             </template>
                         </template>
+
                         </template>
             </el-table-column>
 
@@ -110,6 +144,16 @@
     export default {
         name: 'customTable',
         props:{
+            treeData:{
+                type:Array,
+                default:()=>{
+                    return[]
+                }
+            },
+            defaultProps: {
+                children: 'children',
+                label: 'label'
+            },
             operation:{
                type:Boolean,
                default:true

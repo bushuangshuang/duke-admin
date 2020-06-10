@@ -52,9 +52,9 @@
                     <el-radio-button v-for="ra in item.radios" :label="ra.value" :key="ra.value">{{ra.label}}</el-radio-button>
                 </el-radio-group>
                 <!-- 复选框 -->
-                <el-checkbox-group v-if="item.type==='CheckboxMore'" v-model="searchData[item.prop]" >
+                <el-checkbox-group v-if="item.type==='CheckboxMore'" v-model="searchData[item.prop]" @change="onCheckbox(searchData[item.prop])">
 
-                    <el-checkbox v-for="ch in item.checkboxs" :label="ch.value" :key="ch.value">{{ch.label}}</el-checkbox>
+                    <el-checkbox v-for="ch in item.checkboxs" :label="ch.value" :key="ch.value" @change="onCheckbox(searchData[item.prop])">{{ch.label}}</el-checkbox>
                 </el-checkbox-group>
                 <el-checkbox v-model="searchData[item.prop]" v-if="item.type==='Checkbox'">{{item.checkboxLabel}}</el-checkbox>
                 <!-- 日期 -->
@@ -110,6 +110,8 @@
                     <el-input  v-model="searchData[item.prop]" :style="{marginLeft:item.marginLeft}"></el-input>
                     <el-button  @click="addSpecifications">添加</el-button>
                 </div>
+
+                <div v-if="item.type==='shippingMethod'" style="display: flex">默认运费<el-input style="width: 9%" v-model="searchData[item.defaultNum]" ></el-input>件内<el-input style="width: 9%" v-model="searchData[item.defaultPrice]" ></el-input>  元  每增加<el-input style="width: 9%" v-model="searchData[item.customeNumber]" ></el-input>件增加运费<el-input style="width: 9%" v-model="searchData[item.customePrice]" ></el-input>元</div>
 <!--                <el-button @click="addSpecifications">添加</el-button>-->
                 <el-button v-if="item.type==='NewFreightTemplate'" @click="addSpecifications">新建运费模板</el-button>
                 <el-button v-if="item.type==='NewFreightTemplate'" @click="addSpecifications">刷新模板数据</el-button>
@@ -271,6 +273,10 @@
                     };
                 },
                 methods:{
+                    onCheckbox(value){
+                        this.$emit("onCheckbox",value)
+                        console.log(value,"valie")
+                    },
                     handleAvatarSuccess(res, file) {
                         console.log(res.data[0]);
                         this.$emit("handleAvatarSuccess",res)

@@ -1,23 +1,24 @@
 <template>
   <div class="good-box">
     <customForm
-      :FormTwo="FormTwo"
-      :options="options"
-      :searchForm="searchForm"
-      :elStepList="elStepList"
-      :searchData="searchData"
-      :editorOption="editorOption"
-      :SpecificationsList="SpecificationsList"
-      :colorList="colorList"
-      :ruleInfoForm="ruleForm"
-      :content="content"
-      @emitUploadSuccess="onUploadSuccess"
-      @onEditGood="onEditGood"
-      @onAddGoood="onAddGoood"
-      @onCascaderChange="onCascaderChange"
-      @addSpecifications="addSpecifications"
-      @addSpecificationsColor="addSpecificationsColor"
-    ></customForm>
+            :buttonText="buttonText"
+            :FormTwo="FormTwo"
+            :options="options"
+            :searchForm="searchForm"
+            :elStepList="elStepList"
+            :searchData="searchData"
+            :editorOption="editorOption"
+            :SpecificationsList="SpecificationsList"
+            :colorList="colorList"
+            :ruleInfoForm="ruleForm"
+            :content="content"
+            @emitUploadSuccess="onUploadSuccess"
+            @onEditGood="onEditGood"
+            @onAddGoood="onAddGoood"
+            @onCascaderChange="onCascaderChange"
+            @addSpecifications="addSpecifications"
+            @addSpecificationsColor="addSpecificationsColor"
+    />
   </div>
 </template>
 
@@ -31,6 +32,7 @@ export default {
   data() {
     return {
       content: "",
+      buttonText:'提交',
       editorOption: {
         placeholder: "22"
       },

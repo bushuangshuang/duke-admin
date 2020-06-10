@@ -88,6 +88,12 @@ export default new Router({
                     meta: { title: '物流设置' },
                 },
                 {
+                    path: '/freightTemplate',
+                    component: () => import(/* webpackChunkName: "form" */ '@/view/storeManagement/logisticsIsSet/freightTemplate.vue'),
+                    meta: { title: '添加运费模板' },
+
+                },
+                {
                     path: '/returnAddressManagement',
                     component: () => import(/* webpackChunkName: "form" */ '@/view/storeManagement/returnAddressManagement/index.vue'),
                     meta: { title: '退货地址管理' },

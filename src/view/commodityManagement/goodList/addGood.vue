@@ -42,7 +42,7 @@ export default {
         ]
       },
       colorList: [],
-      searchData: { categories: [], valuation_value: "" },
+      searchData: { categories: [], valuation_value: 0 },
       SpecificationsList: [],
       searchForm: [
         { type: "title", value: "基础信息", marginLeft: "-100px" },
@@ -58,8 +58,8 @@ export default {
         { type: "Specifications" },
         { type: "skuList" },
         { type: "specificationColorInput", prop: "specificationColorInput" },
-        { type: "Input", label: "一口价:", itype:"number", prop: "allPice" },
-        { type: "Input", label: "总数量:", itype:"number", prop: "allNumber" },
+        { type: "Input", label: "一口价:", itype: "number", prop: "allPice" },
+        { type: "Input", label: "总数量:", itype: "number", prop: "allNumber" },
         { type: "title", value: "图文描述", marginLeft: "-100px" },
         { type: "quillEditor", prop: "description" },
         { type: "Select", label: "店铺中分类:", prop: "shop_category" },
@@ -116,8 +116,13 @@ export default {
           ],
           prop: "on_sale"
         },
-        { type: "Input", label: "发货时间:",itype:"number", prop: "delivery_time" },
-        { type: "Input", label: "质保月:",itype:"number", prop: "shelf_life" }
+        {
+          type: "Input",
+          label: "发货时间:",
+          itype: "number",
+          prop: "delivery_time"
+        },
+        { type: "Input", label: "质保月:", itype: "number", prop: "shelf_life" }
       ],
       FormTwo: [{ type: "Steps" }, { type: "ElCasCader" }],
       elStepList: [{ title: "选择商品分类" }, { title: "填写商品信息" }],
@@ -208,6 +213,22 @@ export default {
     onAddGoood() {
       console.log(this.searchData, "searchData");
       this.searchData.areas = this.searchData.areas.map(Number); //number化地址code
+      this.searchData.shelf_life = Number(this.searchData.shelf_life);
+      this.searchData.delivery_time = Number(this.searchData.delivery_time);
+      this.searchData.skus = [
+        {
+          stock: 100,
+          amount: 100,
+          sku_has_group_values: [
+            {
+              spec_groups: { title: "12312" },
+              spec_group_values: { title: "123123" },
+              pictures: ["123123"]
+            }
+          ]
+        }
+      ];
+
       this.$postApi(`/shop/goods`, this.searchData).then(res => {
         if (res.data) {
           this.$message.success("提交成功！");

@@ -1,2 +1,6 @@
 node_modules/
+<<<<<<< HEAD
 .gitignore
+=======
+dist/
+>>>>>>> 06ab3b313690db6d0e8b28ecf824edf70257f7b3

@@ -75,21 +75,8 @@
 <!--                <el-date-picker v-if="item.type==='DateTime'" type='datetime' v-model="searchData[item.prop]" :disabled="item.disable && item.disable(searchData[item.prop])"></el-date-picker>-->
 <!--                &lt;!&ndash; 滑块 &ndash;&gt;-->
 <!--                &lt;!&ndash; <el-slider v-if="item.type==='Slider'" v-model="searchData[item.prop]"></el-slider> &ndash;&gt;-->
-<!--&lt;!&ndash;                图片上传&ndash;&gt;-->
-<!--                <el-upload-->
-<!--                        v-if="item.type==='Upload'"-->
-<!--                        action="https://api.ljkj1688.com/api/upload/public/images"-->
-<!--                        :headers="token"-->
-<!--                        :data="reportData"-->
-<!--                        :show-file-list="true"-->
-<!--                        name="images[]"-->
-<!--                        :on-success="handleAvatarSuccess"-->
-<!--                        list-type="picture-card"-->
-<!--                        :on-preview="handlePictureCardPreview"-->
-<!--                        :on-remove="handleRemove"-->
-<!--                        :limit=5>-->
-<!--                    <i style="display: block;position: relative;top: 50px;" slot="default" class="el-icon-plus"></i>-->
-<!--                </el-upload>-->
+<!--                图片上传-->
+
 <!--                <el-dialog :visible.sync="dialogVisible">-->
 <!--                    <img width="100%" :src="dialogImageUrl" alt="">-->
 <!--                </el-dialog>-->
@@ -175,18 +162,20 @@
           style="width:300px;margin: 0 auto"
         >
           <el-step
-            :title="item.title"
-            :description="item.description"
-            v-for="(item,index) in elStepList"
-            :key="index"
-          ></el-step>
+                  :title="item.title"
+                  :description="item.description"
+                  v-for="(item,index) in elStepList"
+                  :key="index"
+          />
         </el-steps>
         <el-cascader-panel
-          v-if="item.type==='ElCasCader'"
-          :options="options"
-          @change="onCascaderChange"
-          class="el-cascader-elFormTwo"
-        ></el-cascader-panel>
+
+                v-if="item.type==='ElCasCader'"
+                v-model="this.searchData[item.prop]"
+                :options="options"
+                @change="onCascaderChange"
+                class="el-cascader-elFormTwo"
+        />
         <div v-if="item.type==='ElCasCader'" class="elFormTwo-item">
           你当前的选择是:
           <span v-for="(item,index) in arrList" :key="index">{{item}}</span>
@@ -199,28 +188,44 @@
     <el-form :labelWidth="labelWidth" :rules="rules" :model="searchData" ref="searchData">
       <el-form-item v-for="item in searchForm" :label="item.label" :key="item.prop">
         <el-input
-          v-if="item.type==='textarea'"
-          :type="item.type"
-          v-model="searchData[item.prop]"
-          :placeholder="item.placeholder"
-        ></el-input>
+                v-if="item.type==='textarea'"
+                :type="item.type"
+                v-model="searchData[item.prop]"
+                :placeholder="item.placeholder"
+        />
         <span v-if="item.type==='title'" :style="{marginLeft:item.marginLeft}">{{item.value}}</span>
         <!-- 输入框 -->
         <el-input
-          v-if="item.type==='Input'"
-          :type="item.itype"
-          v-model="searchData[item.prop]"
-          :placeholder="item.placeholder"
-          :style="{marginLeft:item.marginLeft}"
-        ></el-input>
+                v-if="item.type==='Input'"
+                :type="item.itype"
+                v-model="searchData[item.prop]"
+                :placeholder="item.placeholder"
+                :style="{marginLeft:item.marginLeft}"
+        />
         <!-- 下拉框 -->
         <el-select
           v-if="item.type==='Select'"
           v-model="searchData[item.prop]"
           @change="SelectChange"
         >
-          <el-option v-for="op in item.options" :label="op.label" :value="op.value" :key="op.value"></el-option>
+          <el-option v-for="op in item.options" :label="op.label" :value="op.value" :key="op.value " @click.native="item.change(searchData[item.prop])"></el-option>
         </el-select>
+        <el-cascader
+                v-model="searchData[item.prop]"
+                @change="item.change"
+                v-if="item.type==='ElCasCader'"
+                placeholder="试试搜索：指南"
+                :options="item.options"
+                filterable></el-cascader>
+        <el-date-picker
+             value-format="yyyy-MM-dd HH:mm:ss"
+             v-if="item.type==='DateEnd'"
+             v-model="searchData[item.prop]"
+             type="daterange"
+             range-separator="至"
+             start-placeholder="开始日期"
+             end-placeholder="结束日期">
+          </el-date-picker>
         <!-- 单选 -->
         <el-radio-group v-if="item.type==='Radio'" v-model="searchData[item.prop]">
           <el-radio v-for="ra in item.radios" :label="ra.value" :key="ra.value">
@@ -253,54 +258,60 @@
         <!-- 时间 -->
         <el-time-select v-if="item.type==='Time'" v-model="searchData[item.prop]" type></el-time-select>
         <!-- 日期时间 -->
+<!--        <el-date-picker-->
+<!--                value-format="yyyy-MM-dd HH:mm:ss"-->
+<!--                v-if="item.type==='DateTime'"-->
+<!--                v-model="searchData[item.prop]"-->
+<!--                type="datetime"-->
+<!--        />-->
         <el-date-picker
-          v-if="item.type==='DateTime'"
-          type="datetime"
-          v-model="searchData[item.prop]"
-          :disabled="item.disable && item.disable(searchData[item.prop])"
-        ></el-date-picker>
+                v-if="item.type==='DateTime'"
+                value-format="yyyy-MM-dd "
+                v-model="searchData[item.prop]"
+                type="date"
+                placeholder="选择日期">
+        </el-date-picker>
         <!-- 滑块 -->
         <!-- <el-slider v-if="item.type==='Slider'" v-model="searchData[item.prop]"></el-slider> -->
         <!--                图片上传-->
         <el-upload
-          v-if="item.type==='Upload'"
-          :action="uploadUrl"
-          :headers="headers"
-          :data="reportData"
-          :show-file-list="true"
-          name="images[]"
-          :on-success="handleCoverimg"
-          list-type="picture-card"
-          :on-preview="handlePictureCardPreview"
-          :on-remove="handleRemove"
-          :limit="5"
-        >
-          <i slot="default" class="el-icon-plus"></i>
+                v-if="item.type==='Upload'"
+                action="https://api.ljkj1688.com/api/upload/public/images"
+                :headers="token"
+                :data="reportData"
+                :show-file-list="true"
+                name="images[]"
+                :on-success="handleAvatarSuccess"
+                list-type="picture-card"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove"
+                :limit=5>
+          <i style="display: block;position: relative;top: 50px;" slot="default" class="el-icon-plus"></i>
         </el-upload>
         <el-dialog :visible.sync="dialogVisible">
           <img width="100%" :src="dialogImageUrl" alt />
         </el-dialog>
         <!--                地址插件-->
         <el-cascader
-          size="large"
-          v-if="item.type==='cascader'"
-          :options="optionsCaser"
-          v-model="searchData[item.prop]"
-          @change="addressChange"
-        ></el-cascader>
+                size="large"
+                v-if="item.type==='cascader'"
+                :options="optionsCaser"
+                v-model="searchData[item.prop]"
+                @change="addressChange"
+        />
         <el-dialog :visible.sync="dialogVisible">
           <img width="100%" :src="dialogImageUrl" alt />
         </el-dialog>
         <quill-editor
-          v-if="item.type==='quillEditor'"
-          ref="myTextEditor"
-          v-model="searchData[item.prop]"
-          :options="editorOption"
-        ></quill-editor>
+                v-if="item.type==='quillEditor'"
+                ref="myTextEditor"
+                v-model="searchData[item.prop]"
+                :options="editorOption"
+        />
         <!-- 开关 -->
         <el-switch v-if="item.type==='Switch'" v-model="searchData[item.prop]"></el-switch>
         <div style="display: flex" v-if="item.type==='isShowAdd'">
-          <el-input v-model="searchData[item.prop]" :style="{marginLeft:item.marginLeft}"></el-input>
+          <el-input v-model="searchData[item.prop]" :style="{marginLeft:item.marginLeft}" style="width: 40%"></el-input>
           <el-button @click="addSpecifications">添加</el-button>
         </div>
         <!--                <el-button @click="addSpecifications">添加</el-button>-->
@@ -311,26 +322,26 @@
             <p>{{item.specificationTitle}}</p>
             <div v-for="(itemV,index) in item.colorList" :key="index">
               <el-input
-                v-if="itemV.type==='ColorInput'"
-                v-model="itemV.prop"
-                style="width: 100%;display: block"
-              ></el-input>
+                      v-if="itemV.type==='ColorInput'"
+                      v-model="itemV.prop"
+                      style="width: 40%;display: block"
+              />
             </div>
             <div class="specificationColor">
               <el-input
-                v-if="item.type==='specificationColorInput'"
-                v-model="searchData[item.prop]"
-                :type="item.itype"
-                style="width: 40%"
-              ></el-input>
+                      v-if="item.type==='specificationColorInput'"
+                      v-model="searchData[item.prop]"
+                      :type="item.itype"
+                      style="width: 40%"
+              />
               <el-upload
+                style="width: 160px;height: 20px"
                 :action="uploadUrl"
-                :headers="headers"
+                :headers="token"
                 :data="reportData"
                 :show-file-list="true"
                 name="images[]"
                 :on-success="handleAvatarSuccess"
-                list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove"
                 :limit="5"
@@ -345,8 +356,12 @@
         </div>
         <div v-if="item.type==='skuList'">
           <span v-for="(item,index) in SpecificationsList" :key="index">{{item.specificationTitle}}</span>
-          <span style="display: inline-block;width: 50px">价格</span>
-          <span style="display: inline-block;width: 50px">数量</span>
+          <custom-table
+                      :operation=false
+                      :columns="columns"
+                      :tableData="tableData"
+          >
+          </custom-table>
         </div>
       </el-form-item>
       <el-form-item style="width:10%;margin: 0 auto">
@@ -360,13 +375,27 @@
             import 'quill/dist/quill.snow.css';
             import 'quill/dist/quill.bubble.css';
             import { quillEditor } from 'vue-quill-editor';
-            import { regionData,CodeToText } from 'element-china-area-data'
+            import { regionData,CodeToText } from 'element-china-area-data';
+            import customTable from "../custom-table/customTable";
             export default {
                 name:'customForm',
                 components:{
-                    quillEditor
+                    quillEditor,
+                    customTable
                 },
                 props:{
+                  columns:{
+                    type:Array,
+                    default:()=>{
+                      return[{}]
+                    }
+                  },
+                  tableData:{
+                    type:Array,
+                    default:()=>{
+                      return[]
+                    }
+                  },
                     dayForm:{
                         type:Object,
                         default:()=>{
@@ -458,6 +487,7 @@
                 data () {
                     return {
                         imgurl:'',
+                      uploadUrl:'',
                         token:{
                             "Authorization": '\'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9wcmFteS5uYXRhcHAxLmNjXC9hcGlcL2F1dGhcL21vYmlsZSIsImlhdCI6MTU5MTQzMzIxNiwiZXhwIjoxNjQzMjczMjE2LCJuYmYiOjE1OTE0MzMyMTYsImp0aSI6InVRYVY2Y05Cc0VCd2hpaDUiLCJzdWIiOjYxLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.e4I78I0gYfRO033NgP96_dJ-neMWb6R3tfeWtefkha4'
                         },
@@ -473,6 +503,12 @@
                     };
                 },
                 methods:{
+                    SelectChange(){
+                      this.$emit("SelectChange")
+                    },
+                    handleCoverimg(){
+                      this.$emit("handleCoverimg")
+                    },
                     onCheckbox(value){
                         this.$emit("onCheckbox",value)
                         console.log(value,"valie")
@@ -493,6 +529,7 @@
                     handlePictureCardPreview(file) {
                         this.dialogImageUrl = file.url;
                         this.dialogVisible = true;
+                        console.log(file,"file")
                     },
                     onCascaderChange(arr){
                         this.arrList=arr

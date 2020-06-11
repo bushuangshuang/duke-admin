@@ -14,6 +14,7 @@
 							@handleDelivery="handleDelivery"
 							@handleUpdatePrice="handleUpdatePrice"
 							@handleDelete="handleDelete"
+							@handleDeleteGood="handleDeleteGood"
 							:ButtonList="ButtonList"
 
 					>
@@ -103,7 +104,9 @@
 			handleDelivery(row){
 				this.$emit('handleDelivery',row)
 			},
-
+			handleDeleteGood(row){
+				this.$emit("handleDeleteGood",row)
+			},
 			handleDelete(row){
 				this.$emit("handleDelete",row)
 			},

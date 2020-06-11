@@ -132,7 +132,21 @@
                         <el-button @click="handleDelivery(scope.row)" type="text" size="small" v-if="scope.row.process_status==='wait_delivery'" >发货</el-button>
 
                     </div>
-
+                    <div v-if="scope.row.pass_status">
+                        <el-button @click="handleDelivery(scope.row)" type="text" size="small" >编辑</el-button>
+                        <el-button @click="handleDelivery(scope.row)" type="text" size="small" v-if="scope.row.pass_status==false">下架</el-button>
+                        <el-button @click="handleDeleteGood(scope.row)" type="text" size="small" >删除</el-button>
+                    </div>
+                    <div v-if="scope.row.sold_count==true">
+                        <el-button @click="handleDelivery(scope.row)" type="text" size="small" >下架</el-button>
+                    </div>
+                    <div v-if="scope.row.sold_count==false">
+                        <el-button @click="handleDelivery(scope.row)" type="text" size="small" >上架</el-button>
+                    </div>
+<!--                    <div v-if="scope.row.pass_status==false">-->
+<!--                        <el-button @click="handleDelivery(scope.row)" type="text" size="small" >编辑</el-button>-->
+<!--                        <el-button @click="handleDelivery(scope.row)" type="text" size="small" >删除</el-button>-->
+<!--                    </div>-->
                     <el-button type="text" size="small" v-if="ButtonList" v-for="(item,index) in ButtonList" @click.native.prevent="item.method(index,scope.row)" :key="index" :style="{display:item.display}">{{item.buttonText}}</el-button>
                 </template>
             </el-table-column>
@@ -230,6 +244,9 @@
             }
         },
         methods:{
+            handleDeleteGood(row){
+                this.$emit("handleDeleteGood",row)
+            },
             // 修改价格
             handleUpdatePrice(row){
                 this.$emit('handleUpdatePrice',row)

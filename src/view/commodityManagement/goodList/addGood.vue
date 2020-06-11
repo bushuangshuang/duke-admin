@@ -1,20 +1,21 @@
 <template>
   <div class="good-box">
     <customForm
-            :buttonText="buttonText"
-            :FormTwo="FormTwo"
             :options="options"
+            :content="content"
+            :columns="columns"
+            :operation=false
+            :tableData="tableData"
+            :buttonText="buttonText"
             :searchForm="searchForm"
-            :elStepList="elStepList"
             :searchData="searchData"
-            :editorOption="editorOption"
-            :SpecificationsList="SpecificationsList"
             :colorList="colorList"
             :ruleInfoForm="ruleForm"
-            :content="content"
-            @emitUploadSuccess="onUploadSuccess"
+            :editorOption="editorOption"
             @onEditGood="onEditGood"
             @onAddGoood="onAddGoood"
+            @emitUploadSuccess="onUploadSuccess"
+            :SpecificationsList="SpecificationsList"
             @onCascaderChange="onCascaderChange"
             @addSpecifications="addSpecifications"
             @addSpecificationsColor="addSpecificationsColor"
@@ -24,14 +25,30 @@
 
 <script>
 import customForm from "@/components/custom-form/customForm";
+import customTable from "../../../components/custom-table/customTable";
 export default {
   name: "addGood",
   components: {
-    customForm
+    customForm,
+    customTable
   },
   data() {
     return {
+      tableData:[],
+      arr:[],
+      index:0,
+      flag:true,
+      columns:[
+        {label:'商品名称',prop:'title'},
+        {label:'价格'},
+        {label:'数量'},
+      ],
       content: "",
+      spec_groups:[],
+      spec_group_values:[
+
+      ],
+      skus:[],
       buttonText:'提交',
       editorOption: {
         placeholder: "22"
@@ -42,102 +59,96 @@ export default {
         ]
       },
       colorList: [],
-      searchData: { categories: [], valuation_value: 0 },
+      searchData: { categories: [1,2], valuation_value: 0 },
       SpecificationsList: [],
       searchForm: [
-        { type: "title", value: "基础信息", marginLeft: "-100px" },
-        { type: "Input", label: "商品标题:", prop: "title" },
-        { type: "title", value: "类目属性", marginLeft: "-100px" },
-        { type: "Select", label: "品牌:", options: [], prop: "brand" },
-        { type: "Select", label: "材质:", prop: "material" },
-        { type: "cascader", label: "产地:", prop: "areas" },
-        // { type: "Checkbox", label: "宝贝定制", checkboxLabel: "支持定制" },
-        { type: "Upload", label: "封面图片" },
-        { type: "title", value: "销售信息", marginLeft: "-100px" },
-        { type: "isShowAdd", label: "规格组:", prop: "SpecificationsText" },
-        { type: "Specifications" },
-        { type: "skuList" },
-        { type: "specificationColorInput", prop: "specificationColorInput" },
-        { type: "Input", label: "一口价:", itype: "number", prop: "allPice" },
-        { type: "Input", label: "总数量:", itype: "number", prop: "allNumber" },
-        { type: "title", value: "图文描述", marginLeft: "-100px" },
-        { type: "quillEditor", prop: "description" },
-        { type: "Select", label: "店铺中分类:", prop: "shop_category" },
-        // {type:'title',value:'支付方式',marginLeft:'-100px'},
-        // {type:'Radio',label:'付款方式',radios:[{label:'一口价(普通交易模式)',value:"0"}]},
-        // {type:'Radio',label:'库存计数',radios:[{label:'买家拍下减库存',value:"0"},{label:'买家付款减库存',value:"1"}]},
+                    { type: "title", value: "基础信息", marginLeft: "-100px" },
+                    { type: "Input", label: "商品标题:", prop: "title" },
+                    { type: "title", value: "类目属性", marginLeft: "-100px" },
+                    { type: "Select", label: "品牌:", options: [], prop: "brand",change(){} },
+                    { type: "Select", label: "材质:", prop: "material" ,change(){} },
+                    { type: "cascader", label: "产地:", prop: "areas" },
+                    { type: "Upload", label: "封面图片" },
+                    { type: "title", value: "销售信息", marginLeft: "-100px" },
+                    { type: "isShowAdd", label: "规格组:", prop: "SpecificationsText" },
+                    { type: "Specifications" },
+                    { type: "skuList" },
+                    { type: "specificationColorInput", prop: "specificationColorInput" },
+                    { type: "Input", label: "一口价:", itype: "number", prop: "allPice" },
+                    { type: "Input", label: "总数量:", itype: "number", prop: "allNumber" },
+                    { type: "title", value: "图文描述", marginLeft: "-100px" },
+                    { type: "quillEditor", prop: "description" },
+                    {
+                      type: "ElCasCader", label: "店铺中分类:", prop: "shop_category" ,
+                      change(value){
+                        this.searchData.shop_category=value
+                        console.log(this.searchData,value)
+                      }
+                    },
 
-        { type: "title", value: "物流信息", marginLeft: "-100px" },
-        // {
-        //   type: "Radio",
-        //   label: "提取方式",
-        //   radios: [{ label: "使用物流配送", value: "0" }]
-        // },
-        {
-          type: "Select",
-          label: "运费模板:",
-          prop: "template_id",
-          options: []
-        },
-        {
-          type: "Radio",
-          label: "计件方式",
-          radios: [
-            { label: "按件数", value: 1 },
-            { label: "按重量", value: 2 },
-            { label: "按体积", value: 3 }
-          ],
-          prop: "valuation_method"
-        },
-        { type: "NewFreightTemplate" },
-        { type: "title", value: "售后服务", marginLeft: "-100px" },
-        {
-          type: "Radio",
-          label: "是否提供发票",
-          radios: [
-            { label: "是", value: true },
-            { label: "否", value: false }
-          ],
-          prop: "is_invoice"
-        },
-        {
-          type: "Checkbox",
-          label: "退换货承诺",
-          value: true,
-          checkboxLabel: "不支持退换货",
-          prop: "support_return"
-        },
-        {
-          type: "Radio",
-          label: "上架时间",
-          radios: [
-            { label: "立即上架", value: true },
-            { label: "放入仓库", value: false }
-          ],
-          prop: "on_sale"
-        },
-        {
-          type: "Input",
-          label: "发货时间:",
-          itype: "number",
-          prop: "delivery_time"
-        },
-        { type: "Input", label: "质保月:", itype: "number", prop: "shelf_life" }
-      ],
-      FormTwo: [{ type: "Steps" }, { type: "ElCasCader" }],
-      elStepList: [{ title: "选择商品分类" }, { title: "填写商品信息" }],
-      options: [
-        {
-          value: "1",
-          label: "2",
-          children: [
-            {
-              value: "指南",
-              label: "指南1"
-            }
-          ]
-        }
-      ]
+                    { type: "title", value: "物流信息", marginLeft: "-100px" },
+                    {
+                      type: "Select",
+                      label: "运费模板:",
+                      prop: "template_id",
+                      options: []
+                    },
+                    {
+                      type: "Radio",
+                      label: "计件方式",
+                      radios: [
+                        { label: "按件数", value: 1 },
+                        { label: "按重量", value: 2 },
+                        { label: "按体积", value: 3 }
+                      ],
+                      prop: "valuation_method"
+                    },
+                    { type: "NewFreightTemplate" },
+                    { type: "title", value: "售后服务", marginLeft: "-100px" },
+                    {
+                      type: "Radio",
+                      label: "是否提供发票",
+                      radios: [
+                        { label: "是", value: true },
+                        { label: "否", value: false }
+                      ],
+                      prop: "is_invoice"
+                    },
+                    {
+                      type: "Checkbox",
+                      label: "退换货承诺",
+                      value: true,
+                      checkboxLabel: "不支持退换货",
+                      prop: "support_return"
+                    },
+                    {
+                      type: "Radio",
+                      label: "上架时间",
+                      radios: [
+                        { label: "立即上架", value: true },
+                        { label: "放入仓库", value: false }
+                      ],
+                      prop: "on_sale"
+                    },
+                    {
+                      type: "Input",
+                      label: "发货时间:",
+                      prop: "delivery_time"
+                    },
+                    { type: "Input", label: "质保月:", itype: "number", prop: "shelf_life" }
+                  ],
+                  options: [
+                    {
+                      value: "1",
+                      label: "2",
+                      children: [
+                        {
+                          value: "指南",
+                          label: "指南1"
+                        }
+                      ]
+                    }
+                  ]
     };
   },
 
@@ -152,21 +163,21 @@ export default {
       this.searchData.images = e;
     },
     getClassificationGoods() {
-      this.$getApi(`/api/good-categories`).then(res => {
-        let data = res.data.data;
-        console.log(data, "Res");
-        data.map(item => {
-          item.label = item.name;
-          item.value = item.id;
-          if (item.children) {
-            item.children.map(itemV => {
-              itemV.label = itemV.name;
-              itemV.value = itemV.id;
-            });
-          }
-          this.options = data;
-        });
-      });
+      // this.$getApi(`/api/good-categories`).then(res => {
+      //   let data = res.data.data;
+      //   console.log(data, "Res");
+      //   data.map(item => {
+      //     item.label = item.name;
+      //     item.value = item.id;
+      //     if (item.children) {
+      //       item.children.map(itemV => {
+      //         itemV.label = itemV.name;
+      //         itemV.value = itemV.id;
+      //       });
+      //     }
+      //     this.options = data;
+      //   });
+      // });
     },
     //获取品牌信息
     getBrands() {
@@ -201,6 +212,12 @@ export default {
       for (var a = 0; a < data.length; a++) {
         data[a].label = data[a].name;
         data[a].value = data[a].id;
+        if(data[a].children){
+          data[a].children.map(item=>{
+            item.label=item.name
+            item.value=item.id
+          })
+        }
       }
       for (var j = 0; j < this.searchForm.length; j++) {
         if (this.searchForm[j].prop == prop) {
@@ -211,21 +228,21 @@ export default {
       return data;
     },
     onAddGoood() {
+
       console.log(this.searchData, "searchData");
+      // this.searchData.categories=
       this.searchData.areas = this.searchData.areas.map(Number); //number化地址code
       this.searchData.shelf_life = Number(this.searchData.shelf_life);
-      this.searchData.delivery_time = Number(this.searchData.delivery_time);
+      this.searchData.delivery_time = this.searchData.delivery_time;
+      this.searchData.valuation_value=12
+      // this.searchData.shop_category=[1,2]
+      this.searchData.images=["https://api.ljkj1688.com/storage/4604207495778304.JPG"]
+      this.searchData.spec_groups=this.spec_groups
       this.searchData.skus = [
         {
-          stock: 100,
-          amount: 100,
-          sku_has_group_values: [
-            {
-              spec_groups: { title: "12312" },
-              spec_group_values: { title: "123123" },
-              pictures: ["123123"]
-            }
-          ]
+          stock:100,
+          amount:200,
+          sku_full_name: '颜色:金色 内存:128GB'
         }
       ];
 
@@ -247,18 +264,98 @@ export default {
         index: this.SpecificationsList.length,
         ss: "skuList"
       });
+
+
+     // this.SpecificationsList
+
     },
     addSpecificationsColor(item) {
-      let colorItem = item.colorList;
-      let colorList = [];
+
+      // // 作为二维数组来运算
+
+      // console.log(result,"result")
       item.colorList.push({
         type: "ColorInput",
         prop: this.searchData.specificationColorInput
       });
-      colorItem.map(item => {
-        console.log(item, "itemColor");
+      let arr=[]
+      let skuarr=[]
+      // const array4=[]
+      item.colorList.map(itemV=>{
+        this.SpecificationsList.map(item=>{
+          item.spec_groups=[{
+            title:item.specificationTitle,
+            spec_group_values: [],
+            value:[]
+          }]
+          arr.push(item)
+
+          item.spec_groups.map(itemG=>{
+            itemG.spec_group_values=item.colorList
+            console.log(       itemG,"  itemG.value")
+            itemG.spec_group_values.map(itemK=>{
+              itemG.value.push( {title:itemK.prop,pictures:null})
+              itemG.spec_group_values=itemG.value
+
+              //   itemF=itemF.title
+
+              //   let itemGroups=`${itemG.title}:${itemF.title}`
+              //   // arr.proups)ush(itemG
+              //   // arr.push(itemG.spec_groups_values)
+
+              //
+              delete itemG.value
+              this.spec_groups.push(itemG)
+              const  hash = {};
+              this.spec_groups=this.spec_groups.reduce(function(item, next) {
+                hash[next.title] ? '' : hash[next.title] = true && item.push(next);
+                return item
+              }, [])
+              console.log(    this.spec_groups,"    this.spec_groups")
+
+            })
+            // console.log( this.spec_groups," this.spec_groups")
+          // let arr1=  Array.from(itemG.spec_groups_values)
+          //   arr1.map(v=>{
+          //     arr1=v.title
+          //     // console.log(v.title)
+          //   })
+          //   console.log(itemG.spec_groups_value,"Arr1444")
+          })
+
+          const  hash = {};
+          item.colorList=item.colorList.reduce(function(item, next) {
+            hash[next.prop] ? '' : hash[next.prop] = true && item.push(next);
+            return item
+          }, [])
+        })
+      })
+      // array4.push(  this.skus)
+      var array1 = ["1", "2"];
+      var array2 = ["a", "b"];
+      var array3 = ["@", "*"];
+     const array4=[array1,array2,array3]
+      // // last为上次运算的结果，current为数组中的当前元素
+      var result = array4.reduce((last, current) => {
+        const array = [];
+        last.forEach(par1 => {
+          current.forEach(par2 => {
+            array.push(par1 + ":" + par2);
+          });
+        });
+        return array;
       });
+      // console.log( result," this.result")
+    },
+    reduceMethod(arr){
+      var obj = {};
+      arr = arr.reduce(function(item, next) {
+            obj[next.title] ? '' : obj[next.title] = true && item.push(next);
+          return item;
+          }, []);
+      console.log( arr," arr")
     }
+
   },
   mounted() {
     this.getClassificationGoods();

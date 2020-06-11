@@ -65,6 +65,39 @@
                                  :align="column.align"
                                  :width="column.width">
                     <template slot-scope="scope">
+<!--                        <el-tree-->
+<!--                                v-if="column.tree==true"-->
+<!--                                :data="column.prop"-->
+<!--                                :props="defaultProps"-->
+<!--                                accordion-->
+<!--                           >-->
+<!--
+                          @node-click="handleNodeClick"-->
+<!--                        </el-tree>-->
+<!--                        :empty-text="treeEmptyText"-->
+<!--                        :node-key="treeNodeKey"-->
+<!--                        :render-after-expand="treeRenderAfterExpand"-->
+<!--                        :highlight-current="treeHighlightCurrent"-->
+<!--                        :default-expand-all="treeDefaultExpandAll"-->
+<!--                        :expand-on-click-node="treeExpandOnClickNode"-->
+<!--                        :check-on-click-node="treeCheckOnClickNode"-->
+<!--                        :default-expanded-keys="treeDefaultExpandedKeys"-->
+<!--                        :show-checkbox="treeShowCheckbox"-->
+<!--                        :check-strictly="treeCheckStrictly"-->
+<!--                        :default-checked-keys="treeDefaultCheckedKeys"-->
+<!--                        :accordion="treeAccordion"-->
+<!--                        :indent="treeIndent"-->
+<!--                        :icon-class="treeIconClass"-->
+<!--                        :filter-node-method="filterNode"-->
+<!--                        @node-click="nodeClick"-->
+<!--                        @check-change="checkChange"-->
+<!--                        @check="check"-->
+                        <el-tree
+                                v-if="column.tree==true"
+                                :data="treeData"
+                                :props="defaultProps"
+                                ref="modelTree">
+                        </el-tree>
                         <img :src="scope.row.piceure" alt="" v-if="column.src==true" style="height: 40px">
                         <template v-if="!column.render">
                             <template v-if="column.formatter">
@@ -75,6 +108,7 @@
                                 <span>{{scope.row[column.prop]}}</span>
                             </template>
                         </template>
+
                         </template>
             </el-table-column>
 
@@ -87,15 +121,32 @@
                 <template slot-scope="scope">
                     <div v-if="scope.row.process_status">
                         <el-button @click="handleInfo(scope.row)" type="text" size="small">详情</el-button>
-                        <el-button @click="handleDelete(scope.row)" type="text" size="small" v-if="scope.row.process_status==='success'||scope.row.process_status==='refused'" >删除</el-button>
+                        <el-button @click="handleDelete(scope.row)" type="text" size="small" v-if="scope.row.process_status==='success'||scope.row.process_status==='trade_closed'" >删除</el-button>
+                        <el-button @click="handleDelete(scope.row)" type="text" size="small" v-if="scope.row.process_status==='refused'" >删除</el-button>
                         <el-button @click="handleConfirmGoods(scope.row)" type="text" size="small" v-if="scope.row.process_status==='wai_shopper_rcv'" >确认收货</el-button>
                         <el-button @click="handleRefuseGoods(scope.row)" type="text" size="small" v-if="scope.row.process_status==='wai_shopper_rcv'" >拒绝收货</el-button>
                         <el-button @click="handleAgreeRefund(scope.row)" type="text" size="small" v-if="scope.row.process_status==='pending'" >同意</el-button>
                         <el-button @click="handleCompleteMaintenance(scope.row)" type="text" size="small" v-if="scope.row.process_status==='wait_user_confirm'" >维修完成</el-button>
-
+                        <el-button @click="handleUpdatePrice(scope.row)" type="text" size="small" v-if="scope.row.process_status==='wait_pay'" >修改价格</el-button>
+                        <el-button @click="handleFreight(scope.row)" type="text" size="small" v-if="scope.row.process_status==='wait_pay'" >修改运费</el-button>
+                        <el-button @click="handleDelivery(scope.row)" type="text" size="small" v-if="scope.row.process_status==='wait_delivery'" >发货</el-button>
 
                     </div>
-
+                    <div v-if="scope.row.pass_status">
+                        <el-button @click="handleDelivery(scope.row)" type="text" size="small" >编辑</el-button>
+                        <el-button @click="handleDelivery(scope.row)" type="text" size="small" v-if="scope.row.pass_status==false">下架</el-button>
+                        <el-button @click="handleDeleteGood(scope.row)" type="text" size="small" >删除</el-button>
+                    </div>
+                    <div v-if="scope.row.sold_count==true">
+                        <el-button @click="handleDelivery(scope.row)" type="text" size="small" >下架</el-button>
+                    </div>
+                    <div v-if="scope.row.sold_count==false">
+                        <el-button @click="handleDelivery(scope.row)" type="text" size="small" >上架</el-button>
+                    </div>
+<!--                    <div v-if="scope.row.pass_status==false">-->
+<!--                        <el-button @click="handleDelivery(scope.row)" type="text" size="small" >编辑</el-button>-->
+<!--                        <el-button @click="handleDelivery(scope.row)" type="text" size="small" >删除</el-button>-->
+<!--                    </div>-->
                     <el-button type="text" size="small" v-if="ButtonList" v-for="(item,index) in ButtonList" @click.native.prevent="item.method(index,scope.row)" :key="index" :style="{display:item.display}">{{item.buttonText}}</el-button>
                 </template>
             </el-table-column>
@@ -107,6 +158,16 @@
     export default {
         name: 'customTable',
         props:{
+            treeData:{
+                type:Array,
+                default:()=>{
+                    return[]
+                }
+            },
+            defaultProps: {
+                children: 'children',
+                label: 'label'
+            },
             operation:{
                type:Boolean,
                default:true
@@ -183,6 +244,21 @@
             }
         },
         methods:{
+            handleDeleteGood(row){
+                this.$emit("handleDeleteGood",row)
+            },
+            // 修改价格
+            handleUpdatePrice(row){
+                this.$emit('handleUpdatePrice',row)
+            },
+            // 修改运费
+            handleFreight(row){
+                this.$emit('handleFreight',row)
+            },
+            // 发货
+            handleDelivery(row){
+                this.$emit('handleDelivery',row)
+            },
             handleCompleteMaintenance(row){
                 this.$emit('handleCompleteMaintenance',row)
             },

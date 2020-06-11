@@ -10,6 +10,7 @@
 			:activeName="TabactiveName"
 			@onTableAdd="onTableAdd"
 			@onHandleClick="onHandleClick"
+			@handleDeleteGood="handleDeleteGood"
 		>
 		</customTabs>
 	</div>
@@ -19,6 +20,7 @@
 	import customTabs from '@/components/custom-tabs/customTabs.vue'
 
 	export default{
+		name:'goodList',
 		components:{
 			customTabs
 		},
@@ -26,17 +28,13 @@
 			return{
 				buttonForm: {isShowBatch:true,isShowShelves:false,isShowAdd:true,},
 				tableData:[
-					{
-						good:'1111'
-					},
+
 				],
 				columns:[
-					{prop:'good', label:'商品名称'},
-					{prop:'good', label:'价格'},
-					{prop:'good', label:'库存'},
-					{prop:'good', label:'销量'},
-					{prop:'good', label:'创建时间'},
-					{prop:'good', label:'审核状态'},
+					{prop:'title', label:'商品名称'},
+					{prop:'price', label:'价格'},
+					{prop:'sold_count', label:'销量'},
+					{prop:'created_at', label:'创建时间'},
 				],
 				searchForm:[
 					{type:'Input',label:'商品标题:'},
@@ -87,9 +85,15 @@
 
 		},
 		mounted() {
-			// this.getList()
+			this.getList()
 		},
 		methods:{
+			handleDeleteGood(row){
+					this.$deleted(`/shop/goods/${row.id}`).then(res=>{
+						this.$message.success("提交成功")
+						this.getList()
+					})
+			},
 			onHandleClick(tab){
 				const tabName=tab.label;
 				switch(tabName){
@@ -182,7 +186,7 @@
 			},
 			getList(){
 				this.$getApi(`/shop/goods`).then(res=>{
-					console.log(res,"REs")
+					this.tableData=res.data.data
 				})
 			},
 			onTableAdd(){
